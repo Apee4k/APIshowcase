@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - APIpay</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link type="image/x-icon" href="{{ url_for('static', filename='img/logo.png') }}" rel="shortcut icon">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="logo">
+                <h1><a href="{{ url_for('index') }}">APIpay</a></h1>
+            </div>
+            <nav>
+                {% if current_user.is_authenticated %}
+                    <p>{{ current_user.email }}</p>  <a href="{{ url_for('logout') }}">Выйти</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Вход</a> | <a href="{{ url_for('register') }}">Регистрация</a>
+                {% endif %}
+            </nav>
+        </header>
+        <main>
+            <h2>Корзина товаров</h2>
+            <div class="api-cards">
+                {% if products %}
+                    {% for product in products %}
+                        <div class="api-card">
+                            <img src="{{url_for('static', filename='img/' + product[1] + '.png')}}" alt="Изображение товара" class="api-image">
+                            <h3 class="api-title">{{ product[1] }}</h3>
+                            <p class="api-description">{{ product[3] }}</p>
+                            <p>Цена: {{ product[6] }} ₽</p>
+                            <form action="{{ url_for('remove_from_cart') }}" method="post">
+                                <input type="hidden" name="product_id" value="{{ product[0] }}">
+                                <button type="submit" class="remove-button">Удалить</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Ваша корзина пуста.</p>
+                {% endif %}
+            </div>
+            {% if products %}
+                <form action="{{ url_for('clear_cart') }}" method="post">
+                    <button type="submit" class="clear-cart-button">Очистить корзину</button>
+                </form>
+                <form action="{{ url_for('checkout') }}" method="get">
+                    <button type="submit" class="checkout-button">Оформить заказ</button>
+                </form>
+            {% endif %}
+        </main>
+        <footer class="site-footer">
+            <!-- Ваш код для футера -->
+        </footer>
+    </div>
+</body>
+</html>

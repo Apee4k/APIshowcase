@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа - APIpay</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="logo">
+                <h1><a href="{{ url_for('index') }}">APIpay</a></h1>
+            </div>
+            <nav>
+                {% if current_user.is_authenticated %}
+                    <p>{{ current_user.email }}</p>  <a href="{{ url_for('logout') }}">Выйти</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Вход</a> | <a href="{{ url_for('register') }}">Регистрация</a>
+                {% endif %}
+            </nav>
+        </header>
+        <main>
+            <h2>Оформление заказа</h2>
+            {% if products %}
+                <ul>
+                    {% for product in products %}
+                        <li>
+                            <h3>{{ product[1] }}</h3>
+                        </li>
+                    {% endfor %}
+                    
+                    <p>Цена: {{ final_cost }} ₽</p>
+                </ul>
+                <form action="{{ url_for('checkout') }}" method="post">
+                    <button type="submit" class="confirm-order-button">Подтвердить заказ</button>
+                </form>
+            {% else %}
+                <p>Ваша корзина пуста.</p>
+            {% endif %}
+        </main>
+        <footer class="site-footer">
+            <!-- Ваш код для футера -->
+        </footer>
+    </div>
+</body>
+</html>
